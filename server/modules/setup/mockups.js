@@ -126,7 +126,6 @@ function getDimensions(entity) {
         middle: {x, y},
     };
 }
-
 // Find circumcircle and circumcenter
 function constructCircumcirle(point1, point2, point3) {
     // util.rounder to avoid floating point nonsense
@@ -215,6 +214,7 @@ for (let k in Class) {
     try {
         if (!Class.hasOwnProperty(k)) continue;
         let type = Class[k];
+        console.log('Loading mockup for ' + k); // phosphorus isn't th
         // Create a reference entities which we'll then take an image of.
         let temptank = new Entity({ x: 0, y: 0 });
         temptank.define(type);

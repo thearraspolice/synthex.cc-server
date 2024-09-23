@@ -79,20 +79,6 @@ Class.megaAutoTankGun = makeTurret({
         },
     ],
 }, {canRepel: true, limitFov: true})
-Class.sniperAutoTankGun = makeTurret({
-    GUNS: [
-        {
-            POSITION: [27, 8, 1, 0, 0, 0, 0],
-            PROPERTIES: {
-                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.assassin]),
-                TYPE: "bullet"
-            }
-        },
-        {
-            POSITION: [5, 8, -1.4, 8, 0, 0, 0]
-        }
-    ],
-}, {canRepel: true, limitFov: true})
 Class.architectGun = makeTurret({
     GUNS: [
         {

@@ -2707,7 +2707,7 @@ Class.trapGuard = makeGuard({
 })
 
 // Builder upgrades
-Class.construct = { // it's "construct" and not "constructor" because "constructor" breaks things
+Class.construct = {
     PARENT: "genericTank",
     LABEL: "Constructor",
     STAT_NAMES: statnames.trap,
@@ -2729,7 +2729,8 @@ Class.construct = { // it's "construct" and not "constructor" because "construct
             }
         }
     ]
-}
+}  // can you make coop?
+//whats that
 Class.engineer = {
     PARENT: "genericTank",
     DANGER: 7,
@@ -3061,30 +3062,52 @@ Class.helix = {
         },
     ],
 }
+Class.snake = {
+    PARENT: "missile",
+    LABEL: "Snake",
+    GUNS: [
+        {
+            POSITION: [6, 12, 1.4, 8, 0, 180, 0],
+            PROPERTIES: {
+                AUTOFIRE: true,
+                STAT_CALCULATOR: "thruster",
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.hunterSecondary, g.snake, g.snakeskin]),
+                TYPE: ["bullet", { PERSISTS_AFTER_DEATH: true }],
+            },
+        },
+        {
+            POSITION: [10, 12, 0.8, 8, 0, 180, 0.5],
+            PROPERTIES: {
+                AUTOFIRE: true,
+                NEGATIVE_RECOIL: true,
+                STAT_CALCULATOR: "thruster",
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.hunterSecondary, g.snake]),
+                TYPE: ["bullet", { PERSISTS_AFTER_DEATH: true }],
+            },
+        },
+    ],
+}
 Class.sidewinder = {
     PARENT: "genericTank",
     LABEL: "Sidewinder",
-    DANGER: 6,
-    STAT_NAMES: statnames.desmos,
-    UPGRADE_TOOLTIP: "[DEV NOTE] This tank does not function as intended yet!",
+    DANGER: 7,
+    BODY: {
+        SPEED: 0.8 * base.SPEED,
+        FOV: 1.3 * base.FOV,
+    },
     GUNS: [
         {
-            POSITION: [10, 8.5, 1.4, 7, 0, 0, 0]
+            POSITION: [10, 11, -0.5, 14, 0, 0, 0],
         },
         {
-            POSITION: [20, 8, -4/3, 0, 0, 0, 0],
+            POSITION: [21, 12, -1.1, 0, 0, 0, 0],
             PROPERTIES: {
-                SHOOT_SETTINGS: combineStats([g.basic, g.desmos]),
-                TYPE: ["bullet", {CONTROLLERS: ['snake']}]
-            }
+                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.sidewinder]),
+                TYPE: "snake",
+                STAT_CALCULATOR: "sustained",
+            },
         },
-        {
-            POSITION: [4.25, 11, 2, 2.25, -4.25, 92.5, 0]
-        },
-        {
-            POSITION: [4.25, 11, 2, 2.25, 4.25, -92.5, 0]
-        }
-    ]
+    ],
 }
 Class.undertowEffect = {
             PARENT: 'genericTank',
@@ -3296,157 +3319,6 @@ Class.quadruplex = {
             POSITION: [3.75, 10, 2.125, 1.5, 6.25, 135, 0]
         },
     ],
-}
-
-// Sidewinder upgrades
-Class.coil = {
-    PARENT: "genericTank",
-    LABEL: "Coil",
-    DANGER: 7,
-    STAT_NAMES: statnames.desmos,
-    UPGRADE_TOOLTIP: "[DEV NOTE] This tank does not function as intended yet!",
-    GUNS: [
-        {
-            POSITION: [20, 8, 0.75, 0, -5, 0, 0],
-            PROPERTIES: {
-                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.desmos]),
-                TYPE: ["bullet", {CONTROLLERS: [["snake", {invert: false}]]}]
-            },
-        },
-        {
-            POSITION: [20, 8, 0.75, 0, 5, 0, 0],
-            PROPERTIES: {
-                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.desmos]),
-                TYPE: ["bullet", {CONTROLLERS: [["snake", {invert: true}]]}]
-            },
-        },
-        {
-            POSITION: [21, 4, 0.75, 0, -5, 0, 0]
-        },
-        {
-            POSITION: [21, 4, 0.75, 0, 5, 0, 0]
-        },
-        {
-            POSITION: [3.625, 7.5, 2.75, 5.75, -6.75, 90, 0],
-        },
-        {
-            POSITION: [3.625, 7.5, 2.75, 5.75, 6.75, -90, 0],
-        },
-        {
-            POSITION: [6, 8, 0.25, 10.5, 0, 0, 0],
-        }
-    ]
-}
-Class.python = {
-    PARENT: "genericTank",
-    LABEL: "Python",
-    DANGER: 7,
-    STAT_NAMES: statnames.desmos,
-    UPGRADE_TOOLTIP: "[DEV NOTE] This tank is a placeholder!"
-}
-Class.ranch = {
-    PARENT: "genericTank",
-    LABEL: "Ranch",
-    DANGER: 7,
-    STAT_NAMES: statnames.drone,
-    UPGRADE_TOOLTIP: "[DEV NOTE] This tank does not function as intended yet!",
-    BODY: {
-        SPEED: base.SPEED * 0.8,
-        FOV: 1.1,
-    },
-    GUNS: [
-        {
-            POSITION: [4.5, 10, 1, 10.5, 0, 0, 0],
-        },
-        {
-            POSITION: [1, 12, 1, 15, 0, 0, 0],
-            PROPERTIES: {
-                MAX_CHILDREN: 3,
-                SHOOT_SETTINGS: combineStats([g.factory, g.babyfactory]),
-                TYPE: "minion",
-                STAT_CALCULATOR: "drone",
-                AUTOFIRE: true,
-                SYNCS_SKILLS: true,
-            },
-        },
-        {
-            POSITION: [11.5, 12, 1, 0, 0, 0, 0],
-        },
-        {
-            POSITION: [5, 7.5, 2.5, 1, -4.5, 95, 0],
-        },
-        {
-            POSITION: [5, 7.5, 2.5, 1, 4.5, -95, 0],
-        },
-    ],
-}
-Class.oroboros = {
-    PARENT: "genericTank",
-    LABEL: "Oroboros",
-    DANGER: 7,
-    STAT_NAMES: statnames.desmos,
-    UPGRADE_TOOLTIP: "[DEV NOTE] This tank is a placeholder!"
-}
-Class.cocciPart1 = {
-    PARENT: "genericSmasher",
-    LABEL: "",
-    TURRETS: [
-        {
-            POSITION: [21.5, 0, 0, 0, 360, 0],
-            TYPE: "smasherBody"
-        },
-        {
-            POSITION: [20, -22, 0, 0, 90/4, 0],
-            TYPE: "smasher",
-            VULNERABLE: true
-        },
-    ]
-}
-Class.cocciPart2 = {
-    PARENT: "genericSmasher",
-    LABEL: "",
-    TURRETS: [
-        {
-            POSITION: [21.5, 0, 0, 0, 360, 0],
-            TYPE: "smasherBody"
-        },
-        {
-            POSITION: [20, -22, 0, 0, 90/3, 0],
-            TYPE: "cocciPart1",
-            VULNERABLE: true
-        },
-    ]
-}
-Class.cocciPart3 = {
-    PARENT: "genericSmasher",
-    LABEL: "",
-    TURRETS: [
-        {
-            POSITION: [21.5, 0, 0, 0, 360, 0],
-            TYPE: "smasherBody"
-        },
-        {
-            POSITION: [20, -22, 0, 0, 90/2, 0],
-            TYPE: "cocciPart2",
-            VULNERABLE: true
-        },
-    ]
-}
-Class.cocci = {
-    PARENT: "genericSmasher",
-    LABEL: "Cocci",
-    UPGRADE_TOOLTIP: "[DEV NOTE] this is a very early prototype and probably won't work so well lol",
-    TURRETS: [
-        {
-            POSITION: [21.5, 0, 0, 0, 360, 0],
-            TYPE: "smasherBody"
-        },
-        {
-            POSITION: [20, -22, 0, 0, 90, 0],
-            TYPE: "cocciPart3",
-            VULNERABLE: true
-        }
-    ]
 }
 
 // Undertow upgrades
@@ -3918,7 +3790,7 @@ Class.autoSmasher = makeAuto({
 // Upgrade Paths
 Class.basic.UPGRADES_TIER_1 = ["twin", "sniper", "machineGun", "flankGuard", "director", "pounder", "trapper", "desmos"]
     Class.basic.UPGRADES_TIER_2 = ["smasher"]
-        Class.smasher.UPGRADES_TIER_3 = ["megaSmasher", "spike", "autoSmasher", "landmine", "cocci"]
+        Class.smasher.UPGRADES_TIER_3 = ["megaSmasher", "spike", "autoSmasher", "landmine"]
         Class.healer.UPGRADES_TIER_3 = ["medic", "ambulance", "surgeon", "paramedic"]
 
     Class.twin.UPGRADES_TIER_2 = ["doubleTwin", "tripleShot", "gunner", "hexaTank", "helix"]
@@ -3949,13 +3821,13 @@ Class.basic.UPGRADES_TIER_1 = ["twin", "sniper", "machineGun", "flankGuard", "di
         Class.overseer.UPGRADES_TIER_3 = ["overlord", "overtrapper", "overgunner", "banshee", "autoOverseer", "overdrive", "commander"]
         Class.cruiser.UPGRADES_TIER_3 = ["carrier", "battleship", "fortress", "autoCruiser", "commander"]
         Class.underseer.UPGRADES_TIER_3 = ["necromancer", "maleficitor", "infestor"]
-        Class.spawner.UPGRADES_TIER_3 = ["factory", "autoSpawner", "ranch"]
+        Class.spawner.UPGRADES_TIER_3 = ["factory", "autoSpawner"]
 
     Class.pounder.UPGRADES_TIER_2 = ["destroyer", "builder", "artillery", "launcher"]
         Class.pounder.UPGRADES_TIER_3 = ["shotgun", "eagle"]
         Class.destroyer.UPGRADES_TIER_3 = ["conqueror", "annihilator", "hybrid", "construct"]
         Class.artillery.UPGRADES_TIER_3 = ["mortar", "ordnance", "beekeeper", "fieldGun"]
-        Class.launcher.UPGRADES_TIER_3 = ["skimmer", "twister", "swarmer", "fieldGun"]
+        Class.launcher.UPGRADES_TIER_3 = ["skimmer", "twister", "swarmer", "fieldGun", "sidewinder"]
 
     Class.trapper.UPGRADES_TIER_2 = ["builder", "triTrapper", "trapGuard"]
         Class.trapper.UPGRADES_TIER_3 = ["barricade", "overtrapper"]
@@ -3963,8 +3835,7 @@ Class.basic.UPGRADES_TIER_1 = ["twin", "sniper", "machineGun", "flankGuard", "di
         Class.triTrapper.UPGRADES_TIER_3 = ["fortress", "hexaTrapper", "septaTrapper", "architect"]
         Class.trapGuard.UPGRADES_TIER_3 = ["bushwhacker", "gunnerTrapper", "bomber", "conqueror", "bulwark"]
 
-    Class.desmos.UPGRADES_TIER_2 = ["helix", "sidewinder", "undertow", "repeater"]
-        Class.helix.UPGRADES_TIER_3 = ["triplex", "quadruplex", "coil", "duplicator"]
-        Class.sidewinder.UPGRADES_TIER_3 = ["coil", "python", "ranch", "oroboros", "cocci"]
+    Class.desmos.UPGRADES_TIER_2 = ["helix", "undertow", "repeater"]
+        Class.helix.UPGRADES_TIER_3 = ["triplex", "quadruplex"]
         Class.undertow.UPGRADES_TIER_3 = ["riptide"]
         Class.repeater.UPGRADES_TIER_3 = ["iterator", "duplicator"]

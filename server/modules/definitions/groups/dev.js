@@ -169,7 +169,7 @@ Class.sanctuaries.PROPS = [
 ]
 
 // Generators
-function compileMatrix(matrix, matrix2Entrance) {
+/*function compileMatrix(matrix, matrix2Entrance) {
     let matrixWidth = matrix[0].length,
         matrixHeight = matrix.length;
     for (let x = 0; x < matrixWidth; x++) for (let y = 0; y < matrixHeight; y++) {
@@ -327,7 +327,7 @@ for (let x = 0; x < tensorWidth; x++) {
         }
     }
 }
-
+*/
 // Testing tanks
 Class.diamondShape = {
     PARENT: "basic",
@@ -1093,53 +1093,6 @@ Class.volute = {
         },
         {
             POSITION: [5, 10, 2.125, 1, 6.375, -90, 0],
-        },
-    ],
-}
-Class.snakeOld = {
-    PARENT: "missile",
-    LABEL: "Snake",
-    GUNS: [
-        {
-            POSITION: [6, 12, 1.4, 8, 0, 180, 0],
-            PROPERTIES: {
-                AUTOFIRE: true,
-                STAT_CALCULATOR: "thruster",
-                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.hunterSecondary, g.snake, g.snakeskin]),
-                TYPE: ["bullet", { PERSISTS_AFTER_DEATH: true }],
-            },
-        },
-        {
-            POSITION: [10, 12, 0.8, 8, 0, 180, 0.5],
-            PROPERTIES: {
-                AUTOFIRE: true,
-                NEGATIVE_RECOIL: true,
-                STAT_CALCULATOR: "thruster",
-                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.hunterSecondary, g.snake]),
-                TYPE: ["bullet", { PERSISTS_AFTER_DEATH: true }],
-            },
-        },
-    ],
-}
-Class.sidewinderOld = {
-    PARENT: "genericTank",
-    LABEL: "Sidewinder (Legacy)",
-    DANGER: 7,
-    BODY: {
-        SPEED: 0.8 * base.SPEED,
-        FOV: 1.3 * base.FOV,
-    },
-    GUNS: [
-        {
-            POSITION: [10, 11, -0.5, 14, 0, 0, 0],
-        },
-        {
-            POSITION: [21, 12, -1.1, 0, 0, 0, 0],
-            PROPERTIES: {
-                SHOOT_SETTINGS: combineStats([g.basic, g.sniper, g.hunter, g.sidewinder]),
-                TYPE: "snakeOld",
-                STAT_CALCULATOR: "sustained",
-            },
         },
     ],
 }
@@ -2722,14 +2675,15 @@ Class.flace = {
     SKILL_CAP: [dfltskl, dfltskl, dfltskl, dfltskl, dfltskl, dfltskl, dfltskl, dfltskl, dfltskl, dfltskl],
 }
 
-Class.developer.UPGRADES_TIER_0 = ["tanks", "bosses", "spectator", "levels", "teams", "eggGenerator", "testing", "addons"]
+
+Class.developer.UPGRADES_TIER_0 = ["tanks", "bosses", "spectator", "levels", "teams", /*"eggGenerator", */"testing", "addons"]
     Class.tanks.UPGRADES_TIER_0 = ["basic", "unavailable", "arenaCloser", "dominators", "sanctuaries", "mothership", "baseProtector", "antiTankMachineGun"]
         Class.unavailable.UPGRADES_TIER_0 = ["flail", "jumpSmasher", "healer", "literallyAMachineGun", "literallyATank", "master", "volute", "whirlwind"]
             Class.flail.UPGRADES_TIER_2 = ["doubleFlail", "mace", "flangle"]
                 Class.doubleFlail.UPGRADES_TIER_3 = ["tripleFlail"]
                 Class.mace.UPGRADES_TIER_3 = ["bigMama", "itHurtsDontTouchIt", "flace"]
                 Class.flangle.UPGRADES_TIER_3 = ["flooster", "flace"]
-            Class.volute.UPGRADES_TIER_3 = ["sidewinderOld"]
+            Class.volute.UPGRADES_TIER_3 = []
             Class.whirlwind.UPGRADES_TIER_2 = ["tornado", "hurricane"]
                 Class.whirlwind.UPGRADES_TIER_3 = ["hexaWhirl", "munition", "whirl3", "whirlGuard", /*"prophet",*/ "vortex"]
                 Class.tornado.UPGRADES_TIER_3 = ["megaTornado", "tempest", "thunderbolt"]
@@ -2737,7 +2691,7 @@ Class.developer.UPGRADES_TIER_0 = ["tanks", "bosses", "spectator", "levels", "te
         Class.dominators.UPGRADES_TIER_0 = ["destroyerDominator", "gunnerDominator", "trapperDominator"]
         Class.sanctuaries.UPGRADES_TIER_0 = ["sanctuaryTier1", "sanctuaryTier2", "sanctuaryTier3", "sanctuaryTier4", "sanctuaryTier5", "sanctuaryTier6"]
 
-    Class.bosses.UPGRADES_TIER_0 = ["sentries", "elites", "mysticals", "nesters", "rogues", "rammers", "terrestrials", "celestials", "eternals", "devBosses"]
+    Class.bosses.UPGRADES_TIER_0 = ["sentries", "elites", "mysticals", "nesters", "rogues", "rammers", "terrestrials", "celestials", "eternals"]
         Class.sentries.UPGRADES_TIER_0 = ["sentrySwarm", "sentryGun", "sentryTrap", "shinySentrySwarm", "shinySentryGun", "shinySentryTrap", "sentinelMinigun", "sentinelLauncher", "sentinelCrossbow"]
         Class.elites.UPGRADES_TIER_0 = ["eliteDestroyer", "eliteGunner", "eliteSprayer", "eliteBattleship", "eliteSpawner", "eliteTrapGuard", "eliteSpinner", "eliteSkimmer", "legionaryCrasher", "guardian", "defender", "sprayerLegion"]
         Class.mysticals.UPGRADES_TIER_0 = ["sorcerer", "summoner", "enchantress", "exorcistor", "shaman"]
@@ -2747,6 +2701,6 @@ Class.developer.UPGRADES_TIER_0 = ["tanks", "bosses", "spectator", "levels", "te
         Class.terrestrials.UPGRADES_TIER_0 = ["ares", "gersemi", "ezekiel", "eris", "selene"]
         Class.celestials.UPGRADES_TIER_0 = ["paladin", "freyja", "zaphkiel", "nyx", "theia", "atlas", "rhea", "julius", "genghis", "napoleon"]
         Class.eternals.UPGRADES_TIER_0 = ["odin", "kronos"]
-        Class.devBosses.UPGRADES_TIER_0 = ["taureonBoss", "zephiBoss", "dogeiscutBoss", "trplnrBoss", "frostBoss", "toothlessBoss", "AEMKShipBoss"]
+        Class.devBosses.UPGRADES_TIER_0 = []
 
-    Class.testing.UPGRADES_TIER_0 = ["diamondShape", "miscTest", "mmaTest", "vulnturrettest", "onTest", "alphaGunTest", "strokeWidthTest", "testLayeredBoss", "tooltipTank", "turretLayerTesting", "bulletSpawnTest", "propTest", "weaponArrayTest", "radialAutoTest", "makeAutoTest", "imageShapeTest", "turretStatScaleTest", "auraBasic", "auraHealer", "weirdAutoBasic", "ghoster", "gunBenchmark", "switcheroo", ["developer", "developer"], "armyOfOne", "vanquisher", "mummifier"]
+    Class.testing.UPGRADES_TIER_0 = ["diamondShape", "miscTest", "mmaTest", "vulnturrettest", "onTest", "alphaGunTest", "strokeWidthTest", "testLayeredBoss", "tooltipTank", "turretLayerTesting", "bulletSpawnTest", "propTest", "weaponArrayTest", "radialAutoTest", "makeAutoTest", "imageShapeTest", "turretStatScaleTest", "auraBasic", "auraHealer", "weirdAutoBasic", "ghoster", "gunBenchmark", "switcheroo", "developer", "armyOfOne", "vanquisher", "mummifier"]
