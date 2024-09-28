@@ -14,8 +14,6 @@ const {
 const { base, statnames, dfltskl, smshskl } = require("../constants.js");
 const g = require("../gunvals.js");
 
-return console.log('[Arms Race Addon] Disabled by default.');
-
 // Removes the desmos branch and adds the single branch to be upgradable from basic.
 // Removes single from assassin branch.
 // Adds the Arms Race menu to the Addons menu
@@ -85,6 +83,66 @@ const makeSurfer = (type, name = -1) => {
   return output;
 };
 
+const makeBomber = (type, name = -1, options = {}) => {
+  type = ensureIsClass(type);
+  let gunType = {
+    pen: 0,
+    thrusters: 0
+  }
+  let output = dereference(type);
+  let cannons = []
+  if (gunType.pen == 0) {
+    cannons.push(
+        {
+        POSITION: [13, 8, 1, 0, 0, 180, 0],
+        })
+  } else {
+      cannons.push(
+        {
+        POSITION: [15, 8, 1, 0, 0, 180, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.basic]),
+            TYPE: "bullet",
+            LABEL: "Pen"
+          },
+        },)  
+  }
+  if (gunType.thrusters == 1) {
+     cannons.push(
+        {
+            POSITION: [18, 8, 1, 0, 0, 130, 0.1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.triAngle]),
+                TYPE: "bullet",
+                LABEL: "Wing",
+            },
+        },
+        {
+            POSITION: [18, 8, 1, 0, 0, 230, 0.1],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.triAngle]),
+                TYPE: "bullet",
+                LABEL: "Wing",
+            },
+        },
+    )
+  }
+    cannons.push(
+        {
+            POSITION: [4, 8, 1.7, 13, 0, 180, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+  );
+  output.GUNS = type.GUNS == null ? cannons : type.GUNS.concat(cannons);
+  output.LABEL = name == -1 ? "Bomber " + type.LABEL : name;
+  return output;
+};
+
+
 // Turrets, Traps, Bullets etc..
 
 // Autos
@@ -113,6 +171,18 @@ Class.megaAutoTurret = makeTurret({
         },
     ],
 }, {label: "Turret", fov: 0.8, extraStats: []})
+Class.driveAutoTurret = makeTurret({
+    SHAPE: 4, 
+    GUNS: [
+        {
+            POSITION: [22, 10, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.pelleter, g.power, { recoil: 1.15 }, g.turret]),
+                TYPE: "bullet",
+            },
+        },
+    ],
+}, {label: "Turret", fov: 0.8, extraStats: []})
 
 // Storm Turrets
 Class.stormProp = {
@@ -120,23 +190,24 @@ Class.stormProp = {
     LABEL: "Storm prop",
     GUNS: [
       {
-        POSITION: [7, 7.5, 0.6, 0, 0, 90, 0],
+        POSITION: [7, 7.5, 0.6, 7, 0, 90, 0],
       }, {
-        POSITION: [7, 7.5, 0.6, 0, 0, 270, 0]
+        POSITION: [7, 7.5, 0.6, 7, 0, 270, 0]
       }
     ]
 }
 Class.stormTurret = makeTurret({
+    PARENT: "genericTank",
     GUNS: [
         {
-        POSITION: [7, 7.5, 0.6, 0, 0, 90, 0],
+        POSITION: [7, 7.5, 0.6, 7, 0, 90, 0],
         PROPERTIES: {
                 SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
                 TYPE: "swarm",
                 STAT_CALCULATOR: "swarm",
                 LABEL: "Guided"
         }, }, {
-        POSITION: [7, 7.5, 0.6, 0, 0, 270, 0],
+        POSITION: [7, 7.5, 0.6, 7, 0, 270, 0],
         PROPERTIES: {
                 SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
                 TYPE: "swarm",
@@ -146,7 +217,80 @@ Class.stormTurret = makeTurret({
       }
     ],
 }, {canRepel: true, limitFov: true, fov: 10, independent: true, extraStats: []})
+Class.vortexProp = {
+    PARENT: "overdriveDeco",
+    LABEL: "Vortex prop",
+    GUNS: [
+      {
+        POSITION: [7, 7.5, 0.6, 7, 0, 0, 0],
+      }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 180, 0]
+      }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 90, 0],
+      }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 270, 0]
+      }
+    ]
+}
+Class.vortexTurret = makeTurret({
+    PARENT: "genericTank",
+    GUNS: [
+        {
+        POSITION: [7, 7.5, 0.6, 7, 0, 90, 0],
+        PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
+                TYPE: "swarm",
+                STAT_CALCULATOR: "swarm",
+                LABEL: "Guided"
+        }, }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 270, 0],
+        PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
+                TYPE: "swarm",
+                STAT_CALCULATOR: "swarm",
+                LABEL: "Guided"
+        }, 
+      }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 0, 0],
+        PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
+                TYPE: "swarm",
+                STAT_CALCULATOR: "swarm",
+                LABEL: "Guided"
+        }, }, {
+        POSITION: [7, 7.5, 0.6, 7, 0, 180, 0],
+        PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.swarm, g.battleship]),
+                TYPE: "swarm",
+                STAT_CALCULATOR: "swarm",
+                LABEL: "Guided"
+        }, }
+    ],
+}, {canRepel: true, limitFov: true, fov: 10, independent: true, extraStats: []})
 
+// Traps 
+Class.chargerTrapDeco = makeDeco(5)
+Class.chargerTrap = {
+	PARENT: "setTrap",
+    INDEPENDENT: true,
+    TURRETS: [
+        {
+            POSITION: [8, 0, 0, 0, 360, 1],
+            TYPE: "chargerTrapDeco",
+        },
+    ],
+    GUNS: weaponArray([
+        {
+            POSITION: [4, 4, 1, 0, 0, 180, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap]),
+                TYPE: ["trap", { PERSISTS_AFTER_DEATH: true }],
+    			SHOOT_ON_DEATH: true,
+                STAT_CALCULATOR: "trap"
+            }
+        }
+    ], 5)
+}
 
 // Tanks
 
@@ -239,29 +383,15 @@ Class.autoSingle = makeAuto("single");
 // Smashers
 
 // Trappers
-// Chargers
-Class.chargerTrapDeco = makeDeco(5)
-Class.chargerTrap = {
-    PARENT: "setTrap",
-    ON: [{
-      event: "death",
-      handler: ({body}) => {
-      /*let trap = new Entity(body);
-      trap.define(Class.trap);*/
-      let trap = new Entity(body).define(Class.hexaTrapper);//qhar
-}
-    }],
-    TURRETS: [{
-      POSITION: [0, 0, 0, 0, 0, 0],
-      TYPE: "chargerTrapDeco",
-    }
-    ]
-}
 
+// Chargers
 Class.charger = {
-    PARENT: "genericTank", // 
-    LABEL: "Charger", // 
-    GUNS: [ // 
+    PARENT: "genericTank",
+    LABEL: "Charger",
+    GUNS: [
+      {
+          POSITION: [18, 12, 1, 0, 0, 0, 0],
+      },
       {
           POSITION: [2, 12, 1.1, 18, 0, 0, 0],
           PROPERTIES: {
@@ -271,6 +401,26 @@ Class.charger = {
           }
       }
     ]
+}
+// Machine Trappers
+Class.machineTrapper = {
+    PARENT: "genericTank",
+    LABEL: "Machine Trapper",
+    DANGER: 6,
+    STAT_NAMES: statnames.trap,
+    GUNS: [
+        {
+            POSITION: [15, 9, 1.4, 0, 0, 0, 0],
+        },
+        {
+            POSITION: [3, 13, 1.3, 15, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.machineGun, {reload: 0.625, size: 0.625, spray: 0.75}]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+    ],
 }
 // Mechs
 Class.autoTrap = makeAuto("trap", { type: 'pillboxTurret' })
@@ -347,6 +497,33 @@ Class.pen = {
     	}
     ]
 }
+Class.encircler = {
+    PARENT: "genericTank",
+    LABEL: "Pen",
+    DANGER: 6,
+    STAT_NAMES: statnames.mixed,
+    GUNS: [
+    	{
+        	POSITION: [21, 8, 1, 0, 0, 0, 0],
+        	PROPERTIES: {
+            	SHOOT_SETTINGS: combineStats([g.basic]),
+            	TYPE: "bullet",
+        	},
+    	},
+      {
+          POSITION: [15, 9, 1.4, 0, 0, 0, 0],
+      },
+      {
+          POSITION: [3, 13, 1.3, 15, 0, 0, 0],
+          PROPERTIES: {
+              SHOOT_SETTINGS: combineStats([g.trap, g.machineGun, {reload: 0.625, size: 0.625, spray: 0.75}]),
+              TYPE: "trap",
+              STAT_CALCULATOR: "trap",
+          },
+       },
+    ]
+}
+Class.autoEncircler = makeAuto("encircler");
 Class.stall = {
     PARENT: "genericTank",
     LABEL: "Stall",
@@ -568,6 +745,39 @@ Class.corral = {
     	}
     ], 3),
 }
+Class.coop = makeAuto({
+    PARENT: "genericTank",
+    DANGER: 6,
+    STAT_NAMES: statnames.mixed,
+    GUNS: weaponArray([
+    	{
+        	POSITION: [20, 8, 1, 0, 0, 0, 0],
+        	PROPERTIES: {
+            	SHOOT_SETTINGS: combineStats([g.basic]),
+            	TYPE: "bullet",
+        	},
+    	},
+    	{
+        	POSITION: [4, 8, 1.7, 13, 0, 0, 0],
+        	PROPERTIES: {
+            	SHOOT_SETTINGS: combineStats([g.trap]),
+            	TYPE: "trap",
+            	STAT_CALCULATOR: 'trap',
+        	},
+    	}, 
+      {
+        	POSITION: [15, 8, 1, 0, 0, 60, 0],
+    	},
+    	{
+        	POSITION: [4, 8, 1.7, 13, 0, 60, 0],
+        	PROPERTIES: {
+            	SHOOT_SETTINGS: combineStats([g.trap]),
+            	TYPE: "trap",
+            	STAT_CALCULATOR: 'trap',
+        	},
+    	}, 
+    ], 3),
+}, "Coop")
 Class.autoPen = makeAuto('pen');
 Class.cockatiel = makeBird('pen', 'Cockatiel');
 Class.interner = makeOver("pen", "Interner", {
@@ -575,11 +785,54 @@ Class.interner = makeOver("pen", "Interner", {
   independent: !0,
   cycle: !1,
 });
+Class.parrotBase = makeSurfer("pen", "ParrotBase")
+Class.parrot = makeBird("parrotBase", "Parrot");
 Class.overpen = makeOver('pen', 'Overpen', {
   count: 2,
   independent: !1,
   cycle: !1
 });
+Class.fortifier = {
+    PARENT: "genericTank",
+    DANGER: 7,
+    LABEL: "Fortifier",
+    STAT_NAMES: statnames.mixed,
+    BODY: {
+        FOV: 1.15,
+    },
+    GUNS: [
+        {
+            POSITION: [28, 8, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+              	SHOOT_SETTINGS: combineStats([g.basic]),
+              	TYPE: "bullet",
+      	    }, }, {
+            POSITION: [4, 8, 1.3, 22, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.minigun, { range: 0.5 }]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+        {
+            POSITION: [4, 8, 1.3, 18, 0, 0, 1/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.minigun, { range: 0.5 }]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+        {
+            POSITION: [4, 8, 1.3, 14, 0, 0, 2/3],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.minigun, { range: 0.5 }]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+    ],
+}
+
 // Builders
 
 Class.fashioner = makeOver('builder', { count : 1, independent: true, cycle: false })
@@ -625,7 +878,7 @@ Class.wark = {
       ]
 }
 
-Class.warkwark = {
+Class.wark = {
     PARENT: "genericTank",
     LABEL: "Wark",
     STAT_NAMES: statnames.trap, 
@@ -646,6 +899,38 @@ Class.warkwark = {
             },
         })
 }
+Class.hutch = {
+    PARENT: "genericTank",
+    LABEL: "Hutch",
+    STAT_NAMES: statnames.trap, 
+    GUNS: [
+        {
+            POSITION: [20, 8, 1, 0, 5.5, 5, 0],
+            PROPERTIES: {
+              	SHOOT_SETTINGS: combineStats([g.basic]),
+              	TYPE: "bullet",
+      	    }, }, {
+            POSITION: [3, 9, 1.5, 14, 5.5, 5, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.twin]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            }, }, {
+            POSITION: [20, 8, 1, 0, -5.5, 355, 0],
+            PROPERTIES: {
+              	SHOOT_SETTINGS: combineStats([g.basic]),
+              	TYPE: "bullet",
+      	    }, }, {
+            POSITION: [3, 9, 1.5, 14, -5.5, 355, 0.5],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.trap, g.twin]),
+                TYPE: "trap",
+                STAT_CALCULATOR: "trap",
+            },
+        },
+      ]
+}
+
           
 // Trap Guards
 Class.triTrapGuard = {
@@ -781,9 +1066,8 @@ Class.hognose = {
         },
     ],
 }
-
+Class.seriemas = makeBird("launcher", "Seriemas");
 // Hunters
-Class.seriemas = makeBird("hunter", "Seriemas");
 // Subverters
 Class.subverter = {
     PARENT: "genericTank",
@@ -830,7 +1114,7 @@ Class.sniper3 = makeRadialAuto("sniperAutoTankGun", {
   count: 3,
 });
 
-// rangers
+// Rangers
 Class.autoRanger = makeAuto("ranger");
 Class.vindicator = {
   PARENT: "genericTank",
@@ -880,10 +1164,39 @@ Class.harpy = addBackGunner("falcon", "Harpy");
 Class.merlin = makeBird("assassin", "Merlin", { super: !0 });
 // Droners
 // Directordrives
-Class.autoDrone = makeAuto("drone", { type: 'pillboxTurret'})
-Class.directorDrive = {
+Class.autoDrone = makeAuto("drone", { type: 'droneAutoTurret' })
+Class.directordrive =  {
     PARENT: "genericTank",
     LABEL: "Directordrive",
+    DANGER: 6,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        FOV: base.FOV * 1.1,
+    },
+    TURRETS: [
+        {
+            POSITION: [9, 0, 0, 0, 360, 1],
+            TYPE: "overdriveDeco",
+        },
+    ],
+    GUNS: [
+        {
+            POSITION: [6, 11, 1.3, 7, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone]),
+                TYPE: "turretedDrone",
+                AUTOFIRE: true,
+                SYNCS_SKILLS: true,
+                STAT_CALCULATOR: "drone",
+                MAX_CHILDREN: 6,
+            },
+        },
+    ],
+}
+Class.stormDrone = makeAuto("drone", "Storm Drone", { type: 'stormTurret' })
+Class.directorstorm = {
+    PARENT: "genericTank",
+    LABEL: "Directorstorm",
     STAT_NAMES: statnames.drone,
     BODY: {
         FOV: base.FOV * 1.1
@@ -899,7 +1212,7 @@ Class.directorDrive = {
             POSITION: [6, 11, 1.3, 7, 0, 0, 0],
             PROPERTIES: {
                 SHOOT_SETTINGS: combineStats([g.drone]),
-                TYPE: "autoDrone",
+                TYPE: "stormDrone",
                 AUTOFIRE: true,
                 SYNCS_SKILLS: true,
                 STAT_CALCULATOR: "drone",
@@ -909,38 +1222,354 @@ Class.directorDrive = {
         }
     ],
     TURRETS: [{
-          POSITION: [0, 0, 0, 0, 0, 0],
-          TYPE: "overdriveDeco"
+          POSITION: [9, 0, 0, 0, 360, 1],
+          TYPE: "stormProp"
     }]
 }
+Class.vortexDrone = makeAuto("drone", "Vortex Drone", { type: 'vortexTurret' })
+Class.vortex = {
+    PARENT: "genericTank",
+    LABEL: "Vortex",
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        FOV: base.FOV * 1.1
+    },
+    GUNS: [
+        {
+            POSITION: {
+                LENGTH: 6,
+                WIDTH: 11,
+                ASPECT: 1.3,
+                X: 7
+            },
+            POSITION: [6, 11, 1.3, 7, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.drone]),
+                TYPE: "vortexDrone",
+                AUTOFIRE: true,
+                SYNCS_SKILLS: true,
+                STAT_CALCULATOR: "drone",
+                MAX_CHILDREN: 6,
+                WAIT_TO_CYCLE: true
+            }
+        }
+    ],
+    TURRETS: [{
+          POSITION: [9, 0, 0, 0, 360, 1],
+          TYPE: "vortexProp"
+    }]
+}
+Class.overstorm = {
+    PARENT: "genericTank",
+    LABEL: "Overstorm",
+    DANGER: 7,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: 0.9 * base.SPEED,
+        FOV: 1.1 * base.FOV,
+    },
+    TURRETS: [
+        {
+            POSITION: [9, 0, 0, 0, 360, 1],
+            TYPE: "stormProp",
+        },
+    ],
+    GUNS: weaponArray({
+        POSITION: [6, 12, 1.2, 8, 0, 90, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.overseer]),
+            TYPE: "vortexDrone",
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: "drone",
+            WAIT_TO_CYCLE: true,
+            MAX_CHILDREN: 4
+        }
+    }, 2)
+}
+Class.tyrant = {
+    PARENT: "genericTank",
+    LABEL: "Tyrant",
+    DANGER: 7,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: 0.8 * base.SPEED,
+        FOV: 1.1 * base.FOV,
+    },
+    MAX_CHILDREN: 8,
+    GUNS: weaponArray({
+        POSITION: [6, 12, 1.2, 8, 0, 0, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.overseer]),
+            TYPE: "autoDrone",
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: "drone",
+            WAIT_TO_CYCLE: true
+        }
+    }, 4),
+    TURRETS: [{
+        POSITION: [9, 0, 0, 0, 360, 1],
+        TYPE: "overdriveDeco"
+    }]
+}
+Class.autoMinion = makeAuto("minion", "Auto-Minion", { TYPE: 'droneAutoTurret' })
+Class.spawnerdrive = {
+    PARENT: "genericTank",
+    LABEL: "Spawnerdrive",
+    DANGER: 7,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: base.SPEED * 0.8,
+        FOV: 1.1,
+    },
+    GUNS: [
+        {
+            POSITION: [4.5, 10, 1, 10.5, 0, 0, 0],
+        },
+        {
+            POSITION: [1, 12, 1, 15, 0, 0, 0],
+            PROPERTIES: {
+                MAX_CHILDREN: 4,
+                SHOOT_SETTINGS: combineStats([g.factory, g.babyfactory]),
+                TYPE: "autoMinion",
+                STAT_CALCULATOR: "drone",
+                AUTOFIRE: true,
+                SYNCS_SKILLS: true,
+            },
+        },
+        {
+            POSITION: [11.5, 12, 1, 0, 0, 0, 0],
+        },
+    ],
+    TURRETS: [{
+        POSITION: [9, 0, 0, 0, 360, 1],
+        TYPE: "overdriveDeco"
+    }]
+}
+Class.stormMinion = makeAuto("minion", "Storm Minion", { TYPE: 'stormTurret' })
+Class.spawnerstorm = {
+    PARENT: "genericTank",
+    LABEL: "Spawnerstorm",
+    DANGER: 6,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: base.SPEED * 0.8,
+        FOV: 1.1,
+    },
+    GUNS: [
+        {
+            POSITION: [4.5, 10, 1, 10.5, 0, 0, 0],
+        },
+        {
+            POSITION: [1, 12, 1, 15, 0, 0, 0],
+            PROPERTIES: {
+                MAX_CHILDREN: 4,
+                SHOOT_SETTINGS: combineStats([g.factory, g.babyfactory]),
+                TYPE: "stormMinion",
+                STAT_CALCULATOR: "drone",
+                AUTOFIRE: true,
+                SYNCS_SKILLS: true,
+            },
+        },
+        {
+            POSITION: [11.5, 12, 1, 0, 0, 0, 0],
+        },
+    ],
+    TURRETS: [{
+        POSITION: [9, 0, 0, 0, 360, 1],
+        TYPE: "stormProp"
+    }]
+}
+Class.factorydrive = {
+    PARENT: "genericTank",
+    LABEL: "Factorydrive",
+    DANGER: 7,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: base.SPEED * 0.8,
+        FOV: 1.1,
+    },
+    GUNS: [
+        {
+            POSITION: [5, 11, 1, 10.5, 0, 0, 0],
+        },
+        {
+            POSITION: [2, 14, 1, 15.5, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.factory]),
+                TYPE: "autoMinion",
+                MAX_CHILDREN: 6,
+                STAT_CALCULATOR: "drone",
+                AUTOFIRE: true,
+                SYNCS_SKILLS: true,
+            },
+        },
+        {
+            POSITION: [12, 14, 1, 0, 0, 0, 0],
+        },
+    ],
+    TURRETS: [{
+        POSITION: [9, 0, 0, 0, 360, 1],
+        TYPE: "overdriveDeco"
+    }]
+}
+Class.autoOverdrive = {
+    PARENT: "genericTank",
+    LABEL: "Auto-Overdrive",
+    DANGER: 7,
+    STAT_NAMES: statnames.drone,
+    BODY: {
+        SPEED: 0.9 * base.SPEED,
+        FOV: 1.1 * base.FOV,
+    },
+    TURRETS: [
+        {
+            POSITION: [9, 0, 0, 0, 360, 1],
+            TYPE: "driveAutoTurret",
+        },
+    ],
+    GUNS: weaponArray({
+        POSITION: [6, 12, 1.2, 8, 0, 90, 0],
+        PROPERTIES: {
+            SHOOT_SETTINGS: combineStats([g.drone, g.overseer]),
+            TYPE: "turretedDrone",
+            AUTOFIRE: true,
+            SYNCS_SKILLS: true,
+            STAT_CALCULATOR: "drone",
+            WAIT_TO_CYCLE: true,
+            MAX_CHILDREN: 4
+        }
+    }, 2)
+}
+// Flanks
+// Hexas
+Class.mingler = {
+    PARENT: "genericTank",
+    LABEL: "Mingler",
+    DANGER: 6,
+    GUNS: weaponArray([
+        {
+            POSITION: [15, 3.5, 1, 0, 0, 30, 0.25],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.gunner, g.cyclone]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [15, 3.5, 1, 0, 0, 90, 0.75],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.gunner, g.cyclone]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [18, 8, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.flankGuard]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [18, 8, 1, 0, 0, 180, 0.5],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.flankGuard]),
+                TYPE: "bullet"
+            }
+        }
+    ], 3)
+}
+Class.autoMingler = makeAuto("mingler")
+Class.unity = {
+    PARENT: "genericTank",
+    LABEL: "Unity",
+    DANGER: 6,
+    GUNS: weaponArray([
+        {
+            POSITION: [17, 4, 1, 0, 0, 30, 0.25],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.gunner, g.flankGuard]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [17, 4, 1, 0, 0, 90, 0.75],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.twin, g.gunner, g.flankGuard]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [21, 12, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.pounder]),
+                TYPE: "bullet"
+            }
+        },
+        {
+            POSITION: [21, 12, 1, 0, 0, 180, 0.5],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.pounder]),
+                TYPE: "bullet"
+            }
+        }
+    ], 3)
+}
+
+// Tri Angles
+Class.brawler = makeFighter("booster", "Brawler")
+Class.autoSurfer = makeAuto("surfer")
+Class.condor = makeSurfer("eagle", "Condor")
+Class.soarer = makeSurfer("booster", "Soarer")
+Class.autoBooster = makeAuto("booster")
+Class.autoFighter = makeAuto("fighter")
+Class.defect = makeBird("tripleShot", "Defect")
+Class.klutz = makeSurfer("defect", "Klutz")
+Class.deficiency = makeBird("pentaShot", "Deficiency")
+Class.autoDefect = makeAuto("defect")
+Class.mangle = makeFighter("defect")
+Class.nuker = makeBomber({
+    PARENT: "genericTank",
+    BODY: {
+        DENSITY: base.DENSITY * 0.6,
+    },
+    DANGER: 7,
+    GUNS: [
+        {
+            POSITION: [20, 8, 1, 0, 0, 0, 0],
+            PROPERTIES: {
+                SHOOT_SETTINGS: combineStats([g.basic, g.flankGuard, g.triAngle, g.triAngleFront]),
+                TYPE: "bullet",
+                LABEL: "Front",
+            }, }, ]
+        }, "Nuker", { pen: 1 , thrusters: 1 })
 
 
 
 
-//stormrades/Branches
-// Trapper branch: 'stormTurret'} // 
-    //Class.directorStorm  //okay byr
-     Class.pen.UPGRADES_TIER_3 = ['tripen', 'costormel', 'interner', 'autoPen', 'stall', 'incarcerator', 'operator']
+// Trapper  Branch
+Class.trapper.UPGRADES_TIER_2.push(...['pen'])
+ Class.pen.UPGRADES_TIER_3 = ['stall', 'tripen', 'encircler','incarcerator', 'operator', 'cockatiel', 'hutch', 'interner', 'autoPen', 'fortifier']
   Class.tripen.UPGRADES_TIER_3 = ["corral"]
   Class.stall.UPGRADES_TIER_3 = ["cubicle", "hurdle"]
-  Class.fortress.UPGRADES_TIER_3 = ["corral"]
+  Class.fortress.UPGRADES_TIER_3 = ["corral", "coop"]
   Class.engineer.UPGRADES_TIER_3 = ["cubicle", 'autoEngineer']
   Class.construct.UPGRADES_TIER_3 = ['hurdle', 'autoConstruct']
   Class.builder.UPGRADES_TIER_3 = ["stall"]
 // Pounder Branch
-Classtormuncher.UPGRADES_TIER_3.push(...['inception', 'sidewinder'])
-if (!Array.isArray(Class.inception.UPGRADES_TIER_3)) {
-    Class.inception.UPGRADES_TIER_3 = [];
-}
- Class.inception.UPGRADES_TIER_3.push(...['hognose'])
-if (!Array.isArray(Class.sidewinder.UPGRADES_TIER_3)) {
-    Class.sidewinder.UstormProp3 = [];
-}
-Class.sidewinder.UPGRADES_TIER_3.push(...['hognose'])
+ Class.inception.UPGRADES_TIER_3 = ['hognose']
+ Class.sidewinder.UPGRADES_TIER_3 = ['hognose']
 // Director Branch
+Class.director.UPGRADES_TIER_2.push(['directordrive'])
+ Class.directordrive.UPGRADES_TIER_2 = ['overdrive', 'directorstorm', 'spawnerdrive']
+  Class.directorstorm.UPGRADES_TIER_3 = ['vortex', 'overstorm']
+  Class.overdrive.UPGRADES_TIER_3 = ['overstorm', 'autoOverdrive']
+  Class.overlord.UPGRADES_TIER_3 = ['tyrant']
+  Class.spawnerdrive.UPGRADES_TIER_3 = ['spawnerstorm']
 
 // Flank Guard Branch
-
+ Class.booster.UPGRADES_TIER_3 = ['brawler']
+ Class.fighter.UPGRADES_TIER_3 = ['brawler']
 // Machine Gun Branch
 
 // Sniper Branch

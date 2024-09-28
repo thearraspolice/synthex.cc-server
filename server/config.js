@@ -22,7 +22,7 @@ module.exports = {
     LOGS: false, // just dont
   
     // The domain of the client
-    CLIENT_ADDRESS: 'aps-plus-plus-client.glitch.me',
+    CLIENT_ADDRESS: 'simple-arras-template-client.glitch.me',
 
     // The \modules\setup\gamemodeconfigs\ files to load.
     // To change specific things about specific gamemodes (such as team count for tdm), edit their config file in \modules\setup\gamemodeconfigs\.
@@ -78,7 +78,7 @@ module.exports = {
     runSpeed: 1.5,
 
     // Where the bullet spawns, where 1 is fully outside the barrel and -1 is fully inside the barrel, and 0 is halfway between.
-    bulletSpawnOffset: -0.9,
+    bulletSpawnOffset: 0.6,
 
     // General damage multiplier everytime damage is dealt.
     DAMAGE_CONSTANT: 0.5,
@@ -122,7 +122,7 @@ module.exports = {
     LEVEL_CHEAT_CAP: 45,
 
     // Amount of player-bots to spawn.
-    BOTS: 21,
+    BOTS: 0,
 
     // How much XP player-bots get per second until they reach LEVEL_CAP.
     BOT_XP: 1000,

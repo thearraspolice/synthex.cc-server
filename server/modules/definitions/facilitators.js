@@ -790,7 +790,7 @@ exports.makeCrasher = type => ({
     HAS_NO_MASTER: true,
     VALUE: type.VALUE * 5,
     BODY: {
-        SPEED: 1 + 5 / Math.max(2, (type.PROPS.length ?? 0) + type.SHAPE),
+        SPEED: 1 + 5 / Math.max(2, (type.PROPS.length ?? 0) + type.SHAPE / 2),
         HEALTH: Math.pow(type.BODY.HEALTH, 2/3),
         DAMAGE: Math.pow(type.BODY.HEALTH, 1/3) * type.BODY.DAMAGE,
         ACCELERATION: 5,
@@ -829,7 +829,7 @@ exports.makeLaby = (type, level, baseScale = 1) => {
     type = ensureIsClass(type);
     let usableSHAPE = Math.max(type.SHAPE, 3),
         downscale = Math.cos(Math.PI / usableSHAPE),
-        strengthMultiplier = 5 ** level;
+        strengthMultiplier = type==='hexagon' ? 10 ** level : 7.5 ** level;
     return {
         PARENT: "food",
         LABEL: ["", "Beta ", "Alpha ", "Omega ", "Gamma ", "Delta "][level] + type.LABEL,

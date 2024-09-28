@@ -1,3 +1,4 @@
+
 // Define mocking up functions
 function getMockup(e, positionInfo) {
     let turretsAndProps = e.turrets.concat(e.props);
@@ -56,6 +57,7 @@ function getMockup(e, positionInfo) {
         }),
     };
 }
+
 
 let endPoints;
 function getFurthestFrom(x, y) {
@@ -126,6 +128,7 @@ function getDimensions(entity) {
         middle: {x, y},
     };
 }
+//function getDimensions(t){const e=[];sizeEntity(t,e),e.sort(((t,e)=>e[0]**2+e[1]**2-t[0]**2-t[1]**2));let r=getFurthestFrom(0,0,e),o=getFurthestFrom(...r,e),s=0;for(;(0==r[0]&&0==o[0]||0==r[1]&&0==o[1])&&4!=t.shape&&(o=getFurthestFrom(...r,e),s++,!(s>10)););let c=(r[0]+o[0])/2,i=(r[1]+o[1])/2,n=getFurthestFrom(c,i,e);for(s=0;(checkIfSamePoint(n,r)||checkIfSamePoint(n,o)||checkIfOnLine(r,o,n))&&(n=getFurthestFrom(c,i,e),s++,!(s>10)););let{x:m,y:F,r:h}=constructCircumcirle(r,o,n);return{axis:2*h,middle:{x:m,y:F}}}
 // Find circumcircle and circumcenter
 function constructCircumcirle(point1, point2, point3) {
     // util.rounder to avoid floating point nonsense
@@ -208,13 +211,11 @@ function sizeEntity(entity, x = 0, y = 0, angle = 0, scale = 1) {
 
 console.log("Started loading mockups...");
 let mockupsLoadStartTime = performance.now();
-
 let mockupData = [];
 for (let k in Class) {
     try {
         if (!Class.hasOwnProperty(k)) continue;
         let type = Class[k];
-        console.log('Loading mockup for ' + k); // phosphorus isn't th
         // Create a reference entities which we'll then take an image of.
         let temptank = new Entity({ x: 0, y: 0 });
         temptank.define(type);
@@ -235,13 +236,14 @@ for (let k in Class) {
         util.error('[WARNING] An error has occured during mockup loading:');
         util.error('When attempting to generate mockup "' + k + '":');
         for (let i in Class[k]) util.error("\t" + i + ": " + Class[k][i]);
-        throw error;
+        //throw error;
     }
 }
 
 // Remove them
 purgeEntities();
-
+//let reusableEntity=new Entity({x:0,y:0}),mockupData=[];Object.keys(Class).forEach((e=>{try{let t,r=Class[e];reusableEntity.define(r),reusableEntity.className=e,reusableEntity.name=r.LABEL,t=getDimensions(reusableEntity),r.mockup={body:reusableEntity.camera(!0),position:t},r.mockup.body.position=t,mockupData.push(getMockup(reusableEntity,t))}catch(t){util.error("[WARNING] An error has occured during mockup loading:"),util.error('When attempting to generate mockup "'+e+'":');for(let e in classType)util.error("\t"+e+": "+classType[e]);throw t}}));
+//const ClassMap=new Map(Object.entries(Class));Object.freeze(ClassMap);let reusableEntity=new Entity({x:0,y:0}),mockupData=new Uint8Array(ClassMap.size);for(let[e,t]of ClassMap)try{let a;reusableEntity.define(t),reusableEntity.className=e,reusableEntity.name=t.LABEL,a=getDimensions(reusableEntity),t.mockup={body:reusableEntity.camera(!0),position:a},t.mockup.body.position=a,mockupData.set(getMockup(reusableEntity,a))}catch(a){util.error("[WARNING] An error has occured during mockup loading:"),util.error('When attempting to generate mockup "'+e+'":');for(let e in t)util.error("\t"+e+": "+t[e]);throw a}
 let mockupsLoadEndTime = performance.now();
 console.log("Finished compiling " + mockupData.length + " classes into mockups.");
 console.log("Mockups generated in " + util.rounder(mockupsLoadEndTime - mockupsLoadStartTime, 3) + " milliseconds.\n");
