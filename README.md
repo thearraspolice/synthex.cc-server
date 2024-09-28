@@ -1,1 +1,0 @@
-# simple-arras-template-server
