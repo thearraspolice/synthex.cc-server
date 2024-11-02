@@ -7,7 +7,12 @@ require('google-closure-library');
 goog.require('goog.structs.PriorityQueue');
 goog.require('goog.structs.QuadTree');
 const { combineStats } = require('../definitions/facilitators');
-
+function curve(input = 0, scale = 1, exponent = 1, base = 0, startExp = 0) {
+    if (input < startExp) {
+        return base + input * scale;
+    }
+    return base + scale * (Math.pow(input - startExp, exponent) + startExp);
+}
 let EventEmitter = require('events'),
     events,
     init = g => events = g.events;
