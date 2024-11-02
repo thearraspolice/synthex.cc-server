@@ -78,8 +78,6 @@ server = require('http').createServer((req, res) => {
 			res.writeHead(200, {});
 			res.end(resStr);
 		}
-		//res.writeHead(200);
-		//return res.end(resStr);
 	}
 });
 server.on('upgrade', (req, socket, head) => wsServer.handleUpgrade(req, socket, head, ws => sockets.connect(ws, req)));
