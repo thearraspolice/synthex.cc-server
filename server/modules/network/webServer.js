@@ -47,10 +47,10 @@ server = require('http').createServer((req, res) => {
 			});
 			break;
 		default:
-			res.writeHead(302, {
-				Location: "https://" + Config.CLIENT_ADDRESS
+			resStr = JSON.stringify({
+				test: "what",
 			});
-			return res.end();
+			break
 			//return the file
 			res.writeHead(200, {
 				'Content-Type': mimeSet[fileToGet.split('.').pop()] || 'text/html'
