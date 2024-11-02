@@ -11,7 +11,7 @@ module.exports = [
     key: process.env.betaTester,
     discordID: "0",
     nameColor: "#fffff",
-    class: "",
+    class: "basic",
     infiniteLevelUp: true,
     note: "Beta Testing Permissions"
   },
