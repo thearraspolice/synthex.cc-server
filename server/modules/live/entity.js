@@ -1529,7 +1529,7 @@ class Entity extends EventEmitter {
         }
 
         this.sizeMultiplier = sizeMultiplier;
-        let speedReduce = Math.pow(this.size / (this.coreSize || this.SIZE), 1);
+        let speedReduce = curve(this.size / (this.coreSize || this.SIZE), Config.LEVEL_SCALE_SPEEDREDUCE, Config.LEVEL_EXPONENT_SPEEDREDUCE, Config.LEVEL_BASE_SPEEDREDUCE, Config.LEVEL_SCALE_STARTREDUCE);
         this.acceleration = (accelerationMultiplier * Config.runSpeed * this.ACCELERATION) / speedReduce;
         if (this.settings.reloadToAcceleration) this.acceleration *= this.skill.acl;
         this.topSpeed = (topSpeedMultiplier * Config.runSpeed * this.SPEED * this.skill.mob) / speedReduce;
