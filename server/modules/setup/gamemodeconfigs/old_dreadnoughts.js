@@ -7,5 +7,7 @@ module.exports = {
     TILE_HEIGHT: 600,
     PORTAL_SPAWNS: true,
     MAX_UPGRADE_TIER: 13,
-    SPAWN_CONFINEMENT: {xMin: 18000}
+    SPAWN_CONFINEMENT: {xMin: 18000},
+    OLD_RECOIL: true,
+    LEVEL_CAP: 300,
 };

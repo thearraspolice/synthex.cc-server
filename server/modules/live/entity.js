@@ -328,9 +328,12 @@ class Gun extends EventEmitter {
         }
         // Apply recoil to motion
         if (this.recoilVelocity > 0 && this.body.recoilMultiplier) {
-            let recoilForce = -this.recoilPosition * this.trueRecoil * this.body.recoilMultiplier * 1.08 / this.body.size / Config.runSpeed;
-            this.body.accel.x += recoilForce * Math.cos(this.facing);
-            this.body.accel.y += recoilForce * Math.sin(this.facing);
+            let recoilForce = curve(this.recoilPosition * this.trueRecoil * this.body.recoilMultiplier / this.body.size / Config.runSpeed, Config.LEVEL_SCALE_RECOIL, Config.LEVEL_EXPONENT_RECOIL, Config.LEVEL_BASE_RECOIL, Config.LEVEL_SCALE_START);
+            if (Config.OLD_RECOIL) {
+                recoilForce = this.recoilPosition * this.trueRecoil * this.body.recoilMultiplier * 1.02 / Math.min(this.body.size, 24) / Config.runSpeed;
+            }
+            this.body.accel.x -= recoilForce * Math.cos(this.facing);
+            this.body.accel.y -= recoilForce * Math.sin(this.facing);
         }
     }
     setBulletType(type, clearChildren = false) {
@@ -1599,7 +1602,8 @@ class Entity extends EventEmitter {
         return Math.min(this.levelCap ?? Config.LEVEL_CAP, this.skill.level);
     }
     get size() {
-        return this.bond == null ? (this.coreSize || this.SIZE) * this.sizeMultiplier * (1 + this.level / 45) : this.bond.size * this.bound.size;
+        if (this.master.type === "miniboss") return this.bond == null ? (this.coreSize || this.SIZE) * this.sizeMultiplier * (1 + this.level / 45) : this.bond.size * this.bound.size;
+        return this.bond == null ? (this.coreSize || this.SIZE) * this.sizeMultiplier * curve(this.level, Config.LEVEL_SCALE_SIZE, ((this.level / 45) ** Config.LEVEL_EXPONENT_SIZE) ** 2 * 0.67268126081, Config.LEVEL_BASE_SIZE, Config.LEVEL_SCALE_START): this.bond.size * this.bound.size;
     }
     get mass() {
         return this.density * (this.size ** 2 + 1);
