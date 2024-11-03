@@ -205,7 +205,6 @@ class PortalLoop {
 
                             entity.reset(); // Remove non-player controllers
                             entity.skill.set(Array(10).fill(0)); // Purge skill upgrades
-                            entity.skill.points = 67;
                             entity.define({ // Purge all unwanted entity config
                                 STAT_NAMES: {},
                                 IS_SMASHER: false,
