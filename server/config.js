@@ -22,7 +22,7 @@ module.exports = {
     LOGS: false, // just dont
   
     // The domain of the client
-    CLIENT_ADDRESS: 'simple-arras-template-client.glitch.me',
+    CLIENT_ADDRESS: 'synthx.cc',
 
     // The \modules\setup\gamemodeconfigs\ files to load.
     // To change specific things about specific gamemodes (such as team count for tdm), edit their config file in \modules\setup\gamemodeconfigs\.
@@ -280,11 +280,11 @@ module.exports = {
 
     LEVEL_BASE_SIZE: 1,
     LEVEL_SCALE_SIZE: 1 / 45,
-    LEVEL_EXPONENT_SIZE: 0.1,
+    LEVEL_EXPONENT_SIZE: 0.088888,
 
     LEVEL_BASE_SPEEDREDUCE: 0,
-    LEVEL_SCALE_SPEEDREDUCE: 1,
-    LEVEL_EXPONENT_SPEEDREDUCE: 0.4,
+    LEVEL_SCALE_SPEEDREDUCE: 0.7,
+    LEVEL_EXPONENT_SPEEDREDUCE: 0.5,
 
     LEVEL_BASE_RECOIL: 0,
     LEVEL_SCALE_RECOIL: 1 / 1.08,

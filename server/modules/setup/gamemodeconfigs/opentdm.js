@@ -1,7 +1,4 @@
-// you can edit this!
-let teams = 4;
-
 module.exports = {
     MODE: "tdm",
-    TEAMS: teams
+    TEAMS: Math.random()>0.5?2:4
 };

@@ -257,7 +257,7 @@ Class.genericDreadnought1 = {
 	PARENT: "genericTank",
 	BODY: dreadnoughtBody,
 	SHAPE: 6,
-	COLOR: 'hexagon',
+	COLOR: '#484848',
 	SIZE: 22.5,
 	SKILL_CAP: Array(10).fill(smshskl+3),
 	REROOT_UPGRADE_TREE: "dreadOfficialV1",
@@ -537,7 +537,7 @@ Class.inquisitorOfficialV1 = {
 	GUNS: weaponArray({
 		POSITION: [7, 7.5, 1.3, 7.5, 0, 0, 0],
 		PROPERTIES: {
-			SHOOT_SETTINGS: combineStats([g.drone, g.overseer, g.dreadv1Drone, {speed: 0.95, maxSpeed: 0.95, damage: 0.93, health: 0.92}]),
+			SHOOT_SETTINGS: combineStats([g.drone, g.overseer, g.dreadv1Drone, {speed: 1.3, maxSpeed: 1.3, damage: 0.93, health: 0.92}]),
 			TYPE: "drone",
 			AUTOFIRE: true,
 			SYNCS_SKILLS: true,

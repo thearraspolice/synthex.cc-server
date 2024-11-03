@@ -1499,7 +1499,7 @@ class Entity extends EventEmitter {
         let accelerationMultiplier = 1,
             topSpeedMultiplier = 1,
             healthMultiplier = 1,
-            shieldMultiplier = 1,
+            shieldMultiplier = 0.2,
             regenMultiplier = 1,
             damageMultiplier = 1,
             penetrationMultiplier = 1,
@@ -1534,14 +1534,15 @@ class Entity extends EventEmitter {
         if (this.settings.reloadToAcceleration) this.acceleration *= this.skill.acl;
         this.topSpeed = (topSpeedMultiplier * Config.runSpeed * this.SPEED * this.skill.mob) / speedReduce;
         if (this.settings.reloadToAcceleration) this.topSpeed /= Math.sqrt(this.skill.acl);
-        this.health.set(((this.settings.healthWithLevel ? 2 * this.level : 0) + this.HEALTH) * this.skill.hlt * healthMultiplier);
+
+        this.health.set(((this.settings.healthWithLevel ? curve(this.level ** Config.LEVEL_EXPONENT_HEALTH, Config.LEVEL_SCALE_HEALTH, Config.LEVEL_EXPONENT_HEALTH, Config.LEVEL_BASE_HEALTH, Config.LEVEL_SCALE_START) : 0) + this.HEALTH) * this.skill.hlt * healthMultiplier);
         this.health.resist = 1 - 1 / Math.max(1, this.RESIST + this.skill.brst);
-        this.shield.set(((this.settings.healthWithLevel ? 0.6 * this.level : 0) + this.SHIELD) * this.skill.shi, Math.max(0, ((this.settings.healthWithLevel ? 0.006 * this.level : 0) + 1) * this.REGEN * this.skill.rgn * regenMultiplier));
+        this.shield.set(((this.settings.healthWithLevel ? curve(this.level, Config.LEVEL_SCALE_SHIELD, Config.LEVEL_EXPONENT_SHIELD, Config.LEVEL_BASE_SHIELD, Config.LEVEL_SCALE_START) : 0) + this.SHIELD) * this.skill.shi, Math.max(0, ((this.settings.healthWithLevel ? curve(this.level, Config.LEVEL_SCALE_REGEN, Config.LEVEL_EXPONENT_REGEN, Config.LEVEL_BASE_REGEN, Config.LEVEL_SCALE_START) : 0) + 1) * this.REGEN * this.skill.rgn * regenMultiplier));
         this.damage = damageMultiplier * this.DAMAGE * this.skill.atk;
         this.penetration = penetrationMultiplier * (this.PENETRATION + 1.5 * (this.skill.brst + 0.8 * (this.skill.atk - 1)));
         if (!this.settings.dieAtRange || !this.range) this.range = rangeMultiplier * this.RANGE;
-        this.fov = fovMultiplier * this.FOV * 275 * Math.sqrt(this.size);
-        this.density = densityMultiplier * (1 + 0.08 * this.level) * this.DENSITY;
+        this.fov = fovMultiplier * this.FOV * (275 + (this.level / 3.5) ** 1.15) * Math.sqrt(this.size);
+        this.density = densityMultiplier * curve(this.level, Config.LEVEL_SCALE_DENSITY, Config.LEVEL_EXPONENT_DENSITY, Config.LEVEL_BASE_DENSITY, Config.LEVEL_SCALE_START) * this.DENSITY;
         this.stealth = stealthMultiplier * this.STEALTH;
         this.pushability = pushabilityMultiplier * this.PUSHABILITY;
         this.recoilMultiplier = this.RECOIL_MULTIPLIER * recoilReceivedMultiplier;
